@@ -1,0 +1,62 @@
+const PubSub = require('../helpers/pub_sub.js');
+
+// CONSTRUCTOR
+class InstrumentFamilyView {
+  constructor(container) {
+    this.container = container;
+  }
+
+
+//FUNCTION 1 - BIND EVENTS
+  bindEvents() {
+    PubSub.subscribe('InstrumentFamilies:selected-family-ready', (evt) => {
+      const instrumentFamily = evt.detail;
+      this.render(instrumentFamily);
+    });
+  }
+
+
+// FUNCTION 2 - RENDER
+  render(family) {
+    this.container.innerHTML = '';
+
+    const familyName = this.createElement('h2', family.name);
+    this.container.appendChild(familyName);
+
+    const familyDescription = this.createElement('p', family.description);
+    this.container.appendChild(familyDescription);
+
+    const instrumentListTitle = this.createElement('h3', 'Instruments include:');
+    this.container.appendChild(instrumentListTitle);
+
+    const instrumentList = this.createInstrumentList(family.instruments);
+    this.container.appendChild(instrumentList);
+  }
+
+
+// FUNCTION 3 - CREATE ELEMENT
+  createElement(elementType, text) {
+    const element = document.createElement(elementType);
+    element.textContent = text;
+    return element;
+  }
+
+
+// FUNCTION 4 CREATE INSTRUMENT LIST
+  createInstrumentList(instruments) {
+    const list = document.createElement('ul');
+
+    instruments.forEach((instrument) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = instrument;
+      list.appendChild(listItem);
+    });
+
+    return list;
+  }
+
+};
+
+
+
+module.exports = InstrumentFamilyView;
